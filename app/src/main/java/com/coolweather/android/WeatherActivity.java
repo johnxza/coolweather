@@ -51,6 +51,15 @@ public class WeatherActivity extends AppCompatActivity {
     private String mWeatherId;
     public DrawerLayout drawerLayout;
     private Button navButton;
+    private String id;
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public String getId(){
+        return id;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,24 +89,28 @@ public class WeatherActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navButton = (Button) findViewById(R.id.nav_button);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         String weatherString = prefs.getString("weather",null);
         if (weatherString != null){
             //有缓存时直接解析天气数据
             Weather weather = Utility.handleWeatherRespomse(weatherString);
             mWeatherId = weather.basic.weatherId;
+            Log.d("requestWeather","从缓存查询数据" );
             showWeatherInfo(weather);
         }else {
             //无缓存时去服务器查询天气
-            String weatherId = getIntent().getStringExtra("weather_id");
+//            String weatherId = getIntent().getStringExtra("weather_id");
             mWeatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.VISIBLE);
             requestWeather(mWeatherId);
+            Log.d("requestWeather","从服务器查询数据");
         }
+        setId(mWeatherId);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeather(mWeatherId);
+                requestWeather(getId());
             }
         });
         String bingPic = prefs.getString("bing_pic",null);
@@ -106,6 +119,7 @@ public class WeatherActivity extends AppCompatActivity {
         }else {
             loadBingPic();
         }
+
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +159,6 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.apply();
                             showWeatherInfo(weather);
                         }else {
-                            Log.d("requestWeather","根据天气请求城市信息失败");
                             Toast.makeText(WeatherActivity.this,"获取信息失败",Toast.LENGTH_SHORT).show();
                         }
                         swipeRefresh.setRefreshing(false);

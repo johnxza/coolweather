@@ -1,7 +1,6 @@
 package com.coolweather.android;
 
 import android.app.Fragment;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +40,6 @@ public class ChooseAreaFragment extends Fragment{
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
-
     private ProgressDialog progressDialog;
     private TextView titleText;
     private Button backButton;
@@ -107,6 +105,7 @@ public class ChooseAreaFragment extends Fragment{
                         getActivity().finish();
                     }else if (getActivity() instanceof WeatherActivity){
                         WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.setId(weatherId);
                         activity.drawerLayout.closeDrawers();
                         activity.swipeRefresh.setRefreshing(true);
                         activity.requestWeather(weatherId);
