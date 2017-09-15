@@ -140,7 +140,6 @@ public class WeatherActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (weather != null && "ok".equals(weather.status)){
-                            Log.d("requestWeather","weather != null 或者 \"ok\".equals(weather.status");
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather",responseText);
                             editor.apply();
@@ -175,10 +174,10 @@ public class WeatherActivity extends AppCompatActivity {
             TextView infoText = view.findViewById(R.id.info_text);
             TextView maxText = view.findViewById(R.id.max_text);
             TextView minText = view.findViewById(R.id.min_text);
-            dateText.setText(forecast.more.info);
+            dateText.setText(forecast.date);
             infoText.setText(forecast.more.info);
-//            maxText.setText(forecast.temperature.max);
-//            minText.setText(forecast.temperature.min);
+            maxText.setText(forecast.temperature.max);
+            minText.setText(forecast.temperature.min);
             forecastLayout.addView(view);
         }
         if (weather.aqi != null){
